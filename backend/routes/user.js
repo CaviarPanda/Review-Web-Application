@@ -1,11 +1,10 @@
 const express = require("express");
-const { create } = require('../controller/user');
+const { create } = require("../controller/user");
+const { userValidator, validator } = require("../middlewares/validator");
+
+
 const router = express.Router();
 
-router.get("/", (req,res)=> {
-    res.send("<h1>About this website: review app</h1>");
-});
-
-router.post("/create", create);
+router.post("/create", userValidator, validator, create);
 
 module.exports = router;
