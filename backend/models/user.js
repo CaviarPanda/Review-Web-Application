@@ -10,16 +10,21 @@ const userSchema = mongoose.Schema({
     email: {
         required : true,
         type: String,
-        trim: true,
         unique: true
     },
     password: {
         required : true,
         type: String,
+    },
+    isVerified: {
+        required: true,
+        type: Boolean,
+        default: false
     }
 });
 
 //whenever we save file into db, before saving run this function
+//hash function 
 userSchema.pre('save', async function(next) {
     if(this.isModified("password")){
        const hash = await bcrypt.hash(this.password, 10); 
