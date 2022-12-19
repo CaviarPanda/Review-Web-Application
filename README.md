@@ -4,7 +4,8 @@
 ## Functionalities 
 - User Sign up and Sign in
 - Email Validation 
-- more in progress
+- Forgot Password/reset password
+- more in progress...
 
 ## How to Start Application
 - cd backend
