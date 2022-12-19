@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 
-const emailVerificationSchema = mongoose.Schema({
+const passwordResetSchema = mongoose.Schema({
   // Object Id is how we will store the newUser object (name, email, password)
   // ref is model name from UserSchema
   owner: {
@@ -22,7 +22,7 @@ const emailVerificationSchema = mongoose.Schema({
 });
 
 //hash function for token
-emailVerificationSchema.pre("save", async function (next) {
+passwordResetSchema.pre("save", async function (next) {
   if (this.isModified("token")) {
     this.token = await bcrypt.hash(this.token, 10);
   }
@@ -30,12 +30,9 @@ emailVerificationSchema.pre("save", async function (next) {
 });
 
 //compare hashed OTP stored in mongodb with actual token
-emailVerificationSchema.methods.compareTokens = async function (token) {
+passwordResetSchema.methods.compareTokens = async function (token) {
   const result = await bcrypt.compare(token, this.token);
   return result;
 };
 
-module.exports = mongoose.model(
-  "EmailVerificationToken",
-  emailVerificationSchema
-);
+module.exports = mongoose.model("passwordResetToken", passwordResetSchema);

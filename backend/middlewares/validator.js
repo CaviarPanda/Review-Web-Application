@@ -12,12 +12,22 @@ exports.userValidator = [
     .withMessage("Password should be 8 - 20 characters long"),
 ];
 
-exports.validator = (req, res, next) => {
-    const error = validationResult(req).array();
-    console.log(error);
-    if(error.length){
-        return res.json({error: error[0].msg})
-    }
+exports.validatePassword = [
+  check("newPassword")
+    .trim()
+    .not()
+    .isEmpty()
+    .withMessage("Password is empty!")
+    .isLength({ min: 8, max: 20 })
+    .withMessage("Password should be 8 - 20 characters long"),
+];
 
-    next();
-}
+exports.validator = (req, res, next) => {
+  const error = validationResult(req).array();
+  console.log(error);
+  if (error.length) {
+    return res.json({ error: error[0].msg });
+  }
+
+  next();
+};
