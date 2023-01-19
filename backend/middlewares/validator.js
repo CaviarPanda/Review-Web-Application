@@ -22,6 +22,15 @@ exports.validatePassword = [
     .withMessage("Password should be 8 - 20 characters long"),
 ];
 
+exports.signInValidator = [
+  check("email").normalizeEmail().isEmail().withMessage("Email is invalid"),
+  check("password")
+    .trim()
+    .not()
+    .isEmpty()
+    .withMessage("Password not provided"),
+];
+
 exports.validator = (req, res, next) => {
   const error = validationResult(req).array();
   console.log(error);

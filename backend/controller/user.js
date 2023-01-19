@@ -1,6 +1,7 @@
 //req is info coming from our front end eg json, images, etx
 //res is info we giving as a response to front end
 
+const jwt = require("jsonwebtoken");
 const User = require("../models/user");
 const EmailVerificationToken = require("../models/emailVerificationToken");
 const { isValidObjectId } = require("mongoose");
@@ -206,4 +207,26 @@ exports.resetPassword = async (req, res) => {
   });
 
   res.json({ message: "Password has been reset successfully" });
+};
+
+exports.signIn = async (req, res) => {
+  const { email, password } = req.body;
+  if (!email) {
+    sendError(res, "no email provided");
+  }
+
+  const user = await User.findOne({ email });
+  if (!user) {
+    return sendError(res, "no user found with that email");
+  }
+
+  passwordMatched = await user.comparePasswords(password);
+  if (!passwordMatched) {
+    return sendError(res, "Password not correct. Try again");
+  }
+
+  const { _id, name } = user;
+  const jswtToken = jwt.sign({ userId: user._id }, process.env.JWT_SECRET);
+
+  res.json({ user: { id: _id, name, email, token: jswtToken } });
 };
